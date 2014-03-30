@@ -8,8 +8,8 @@
 $response = array();
  
 // check for post data
-if (isset($_POST["fechaPartido"])) {
-    $fechaPartido = $_POST['fechaPartido'];
+if (isset($_GET["fechaPartido"])) {
+    $fechaPartido = $_GET['fechaPartido'];
 	
 	// include db connect class
 	require_once __DIR__ . '/db_connect.php';
@@ -24,24 +24,21 @@ if (isset($_POST["fechaPartido"])) {
         // check for empty result
         if (mysql_num_rows($result) > 0) {
 		
-//Nuevo
-			$result = mysql_fetch_array($result);
+			// user node
+			$response["partidos"] = array();
+			
+			while($row = mysql_fetch_array($result)){
  
-            $partidos = array();
-            $partidos["id"] = $result["id"];
-            $partidos["visita"] = $result["visita"];
-			$partidos["casa"] = $result["casa"];
-			$partidos["estadio"] = $result["estadio"];
-			$partidos["hora"] = $result["hora"];
- 
-            // success
-            $response["success"] = 1;
- 
-            // user node
-            $response["partidos"] = array();
- 
-            array_push($response["partidos"], $partidos);
- 
+				$partido = array();
+				$partido["id"] = $row["id"];
+				$partido["visita"] = $row["visita"];
+				$partido["casa"] = $row["casa"];
+				$partido["estadio"] = $row["estadio"];
+				$partido["hora"] = $row["hora"];
+				array_push($response["partidos"], $partido);
+			}
+			// success
+			$response["success"] = 1;
             // echoing JSON response
             echo json_encode($response);
         } else {

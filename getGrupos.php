@@ -23,19 +23,17 @@ $response = array();
         if (mysql_num_rows($result) > 0) {
 		
 //Nuevo
-			$result = mysql_fetch_array($result);
- 
-            $Grupos = array();
-            $Grupos["Pais"] = $result["Pais"];
-            $Grupos["nombre"] = $result["nombre"];
-            // success
-            $response["success"] = 1;
- 
-            // user node
+			// user node
             $response["Grupos"] = array();
+			while($row = mysql_fetch_array($result)){
  
-            array_push($response["Grupos"], $Grupos);
- 
+				$Grupos = array();
+				$Grupos["Pais"] = $row["Pais"];
+				$Grupos["Grupo"] = $row["nombre"];
+				// success
+				array_push($response["Grupos"], $Grupos);
+			}
+			$response["success"] = 1;
             // echoing JSON response
             echo json_encode($response);
         } else {

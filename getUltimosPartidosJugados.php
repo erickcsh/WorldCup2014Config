@@ -18,33 +18,33 @@ if (isset($_POST["fechaCalculo"])) {
 	$db = new DB_CONNECT();
 	
 	 // get a product from products table
-	$result = mysql_query("CALL getultimosPartidosAJugar($fechaCalculo)");
+	$result = mysql_query("CALL getultimosPartidosJugados($fechaCalculo)");
  
     if (!empty($result)) {
         // check for empty result
         if (mysql_num_rows($result) > 0) {
-		
-//Nuevo
-			$result = mysql_fetch_array($result);
- 
-            $ultimosPartidos = array();
-            $ultimosPartidos["id"] = $result["id"];
-            $ultimosPartidos["Visita"] = $result["Visita"];
-			$ultimosPartidos["Casa"] = $result["Casa"];
-			$ultimosPartidos["Estadio"] = $result["Estadio"];
-			$ultimosPartidos["Ronda"] = $result["Ronda"];
-			$ultimosPartidos["Estado"] = $result["Estado"];
-			$ultimosPartidos["fecha"] = $result["fecha"];
-			$ultimosPartidos["hora"] = $result["hora"]; 
-            // success
-            $response["success"] = 1;
- 
-            // user node
+			
+			// user node
             $response["ultimosPartidos"] = array();
- 
-            array_push($response["ultimosPartidos"], $ultimosPartidos);
- 
-            // echoing JSON response
+			
+			while($row = mysql_fetch_array($result))
+			{
+				$Partido = array();
+				$Partido["id"] = $row["id"];
+				$Partido["Visita"] = $row["Visita"];
+				$Partido["Casa"] = $row["Casa"];
+				$Partido["Estadio"] = $row["Estadio"];
+				$Partido["Ronda"] = $row["Ronda"];
+				$Partido["Estado"] = $row["Estado"];
+				$Partido["fecha"] = $row["fecha"];
+				$Partido["hora"] = $row["hora"]; 
+				
+				array_push($response["ultimosPartidos"], $Partido);
+			}
+            
+			// success
+            $response["success"] = 1;
+			// echoing JSON response
             echo json_encode($response);
         } else {
             // no product found

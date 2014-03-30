@@ -23,24 +23,20 @@ if (isset($_POST["nombreEquipo"])) {
     if (!empty($result)) {
         // check for empty result
         if (mysql_num_rows($result) > 0) {
-		
-
-			$result = mysql_fetch_array($result);
- 
-            $jugadores = array();
-            $jugadores["id"] = $result["id"];
-            $jugadores["nombre"] = $result["nombre"];
-			$jugadores["numero"] = $result["numero"];
-			$jugadores["posicion"] = $result["posicion"];
- 
-            // success
-            $response["success"] = 1;
- 
-            // user node
-            $response["jugadores"] = array();
- 
-            array_push($response["jugadores"], $jugadores);
- 
+			// user node
+			$response["jugadores"] = array();
+			
+			while($row = mysql_fetch_array($result))
+			{
+				$jugador = array();
+				$jugador["id"] = $row["id"];
+				$jugador["nombre"] = $row["nombre"];
+				$jugador["numero"] = $row["numero"];
+				$jugador["posicion"] = $row["posicion"];
+				array_push($response["jugadores"], $jugador);
+			}
+			// success
+			$response["success"] = 1;
             // echoing JSON response
             echo json_encode($response);
         } else {

@@ -24,26 +24,25 @@ if (isset($_POST["fechaCalculo"])) {
         // check for empty result
         if (mysql_num_rows($result) > 0) {
 		
-//Nuevo
-			$result = mysql_fetch_array($result);
- 
-            $proximosPartidos = array();
-            $proximosPartidos["id"] = $result["id"];
-            $proximosPartidos["Visita"] = $result["Visita"];
-			$proximosPartidos["Casa"] = $result["Casa"];
-			$proximosPartidos["Estadio"] = $result["Estadio"];
-			$proximosPartidos["Ronda"] = $result["Ronda"];
-			$proximosPartidos["Estado"] = $result["Estado"];
-			$proximosPartidos["fecha"] = $result["fecha"];
-			$proximosPartidos["hora"] = $result["hora"]; 
-            // success
-            $response["success"] = 1;
- 
-            // user node
+			// user node
             $response["proximosPartidos"] = array();
- 
-            array_push($response["proximosPartidos"], $proximosPartidos);
- 
+			while($row = mysql_fetch_array($result))
+			{
+				$Partido = array();
+				$Partido["id"] = $row["id"];
+				$Partido["Visita"] = $row["Visita"];
+				$Partido["Casa"] = $row["Casa"];
+				$Partido["Estadio"] = $row["Estadio"];
+				$Partido["Ronda"] = $row["Ronda"];
+				$Partido["Estado"] = $row["Estado"];
+				$Partido["fecha"] = $row["fecha"];
+				$Partido["hora"] = $row["hora"]; 
+				
+	 
+				array_push($response["proximosPartidos"], $Partido);
+			}
+			// success
+			$response["success"] = 1;
             // echoing JSON response
             echo json_encode($response);
         } else {
