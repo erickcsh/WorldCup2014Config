@@ -1,3 +1,4 @@
+<meta charset="utf8" />
 <?php
  
 /*
@@ -14,6 +15,7 @@ $response = array();
 	 
 	// connecting to db
 	$db = new DB_CONNECT();
+	mysql_set_charset('utf8');
 	
 	 // get a product from products table
 	$result = mysql_query("CALL getGrupos()");
@@ -22,17 +24,22 @@ $response = array();
         // check for empty result
         if (mysql_num_rows($result) > 0) {
 		
-//Nuevo
-			// user node
             $response["Grupos"] = array();
+			$count =1;
 			while($row = mysql_fetch_array($result)){
- 
-				$Grupos = array();
-				$Grupos["Pais"] = $row["Pais"];
-				$Grupos["Grupo"] = $row["nombre"];
-				// success
-				array_push($response["Grupos"], $Grupos);
+ 				if ($count == 1 ) {
+					$Grupos = array();
+					$Grupos["Nombre"] = $row["nombre"];
+					$Grupos["Integrantes"] = array();
+				}
+				array_push($Grupos["Integrantes"], $row["Pais"]);
+				$count = $count+1;
+				if ($count == 5) {
+					array_push($response["Grupos"], $Grupos);
+					$count =1;
+				}
 			}
+			
 			$response["success"] = 1;
             // echoing JSON response
             echo json_encode($response);
